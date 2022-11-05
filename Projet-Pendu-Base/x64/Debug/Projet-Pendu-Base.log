@@ -1,0 +1,3 @@
+﻿  main.c
+c:\users\joris\desktop\basependuc\projet-pendu-base\main.c(70): warning C4267: '=' : conversion de 'size_t' en 'int', perte possible de données
+  Projet-Pendu-Base.vcxproj -> C:\Users\joris\Desktop\BasePenduC\x64\Debug\Projet-Pendu-Base.exe
