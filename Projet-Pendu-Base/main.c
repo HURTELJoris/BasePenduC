@@ -11,54 +11,21 @@ int main(int argc, char ** argv)
 	//--------------------------------------------------
 	// Exemple d'utilisation du dictionnaire de mot : 
 	char mot[100], charResearch;
-	int i, c, j = 0, essais, numChoisi, tailleMot = 0;
+	int i, c, lettreestdanslemot = 0, coups, numChoisi, tailleMot = 0;
 	int *lettreTrouvee = NULL; // Un tableau de booléens. Chaque case correspond à une lettre du mot secret. 0 = lettre non trouvée, 1 = lettre trouvée
 
 	// Menu Accueil
-	printf("Bonjour ! Bienvenu au jeu du pendu !\n\n1 - Mode avec un mot rentrer par un utilisateur\n2 - Mode avec un mot choisis dans un dictionnaire\n\nSaisir votre choix : ");
-	scanf("%d", &numChoisi);
+	printf("Bienvenu dans le Pendu !\n\n");
+	
 
-	while (numChoisi != 1 && numChoisi != 2)
-	{
-		printf("Entrer soit 1 ou 2 svp : ");
-		scanf("%d", &numChoisi);
-	}
 
-	do // On vide le buffer du scanf pour éviter le saut 
-	{
-		c = getchar();
-	} while (c != EOF && c != '\n');
-
-	if (numChoisi == 1)
-	{
-		// Saisi du mot mystère
-		printf("Entrer un mot mystere (En majuscule) : ");
-		for (i = 0; i < 100; i++) {
-
-			mot[i] = _getch(); // Recupere la saisie dans notre chaine
-
-			if (mot[i] == 13) // Si entree
-			{
-				break;
-			}
-
-			printf("*");
-		}
-
-		mot[i] = '\0'; // Definis la case actuelle comme la derniere de notre chaine
-
-		printf("\n\n");
-	}
-	else if (numChoisi == 2)
-	{
-		// Piocher le mot
-		printf("Pioche du mot en cours ...\n\n");
-		piocherMot(mot);
-	}
+	// Piocher le mot
+	piocherMot(mot);
+	
 
 	// Demander le nombre d'essais
-	printf("En combien d essais max voulez-vous trouver le mot mystere ? : ");
-	scanf("%d", &essais);
+	printf("En combien de coups voulez-vous essayer trouver le mot mystere ? : ");
+	scanf("%d", &coups);
 
 	// Afficher à quoi ressemble le mot piocher
 	printf("\nVoici le mot du debut : ");
@@ -71,84 +38,84 @@ int main(int argc, char ** argv)
 
 	lettreTrouvee = malloc(tailleMot * sizeof(int)); // On alloue dynamiquement le tableau lettreTrouvee (dont on ne connaissait pas la taille au départ)
 
-	for (i = 0; i < tailleMot; i++) // Met le tableau à false (0)
+	for (i = 0; i < tailleMot; i++) // Met le tableau à false (0), de ce fait, chaque lettre du mot sera représentée de base par une étoile *
 	{
 		lettreTrouvee[i] = 0;
 	}
 
-	while (essais != 0) // Tant que le nombre d'essais est pas 0
+	while (coups != 0) // Tant qu'il y a encore des coups à jouer.
 	{
-		printf("\n\n\nIl vous reste %d coups a jouer", essais); // Afficher le nombres d'essais restant
+		printf("\n\n\nIl vous reste %d coups a jouer", coups); // Afficher le nombres de coups restant.
 
-		do // On Re vide le buffer du scanf pour éviter le saut
+		do // On Re vide le buffer du scanf pour éviter le saut.
 		{
 			c = getchar();
 		} while (c != EOF && c != '\n');
 
-		printf("\nProposez une lettre (En majuscule) : "); // Rentrer un caractere
+		printf("\nProposez une lettre (En majuscule) : "); // Rentrer le caractère voulu pour essayer de trouver le mot mystère.
 		scanf("%c", &charResearch);
 
-		// On parcourt motSecret pour vérifier si la lettre proposée y est
+		// On parcourt le mot mystère pour vérifier si la lettre proposée y est.
 		for (i = 0; mot[i] != '\0'; i++)
 		{
-			if (charResearch == mot[i]) // Si la lettre y est
+			if (charResearch == mot[i]) // Si la lettre y est.
 			{
-				lettreTrouvee[i] = 1; // On met à 1 (vrai) le case du tableau de booléens correspondant à la lettre actuelle
+				lettreTrouvee[i] = 1; // On met à 1 (vrai) à la case du tableau de booléens correspondant à la lettre actuelle, ce qui va par la suite, permettre d'afficher la lettre au lieu d'une étoile * lors de l'affichage du mot.
 			}
 		}
 
-		j = 0;
 
 		printf("\nLe mot donne : ");
-		for (i = 0; mot[i] != '\0'; i++)
+		// Ceci va permettre l'affichage du mot.
+		for (i = 0; mot[i] != '\0'; i++) 
 		{
 
 			if (charResearch == mot[i])
 			{
-				printf("%c", mot[i]);
+				printf("%c", mot[i]); // Si la lettre y est.
 
-				j++;
+				lettreestdanslemot++; // On ajoute 1 lettreestdanslemot, ce qui donne 1 (vrai).
 			}
-			else if (lettreTrouvee[i])
+			else if (lettreTrouvee[i])  // Sinon si la variable lettreTrouvee est à 1 (vrai) sur la lettre (i).
 			{
-				printf("%c", mot[i]);
+				printf("%c", mot[i]); // On écrit la lettre (i).
 			}
 			else
 			{
-				printf("*");
+				printf("*"); // Sinon (si variable lettreTrouvee est à autre chose que 1 (vrai), c'est à dire 0 (faux) On écrit une étoile *.
 			}
 		}
 
-		int win = 1;
+		int win = 1; // Variable déterminant la victoire du joueur. De base mise sur 1 (vrai).
 
-		for (i = 0; i < tailleMot; i++)
+		for (i = 0; i < tailleMot; i++) // Cet algorithme va vérifier si chaque lettre est bien trouvée. Si non, on met win à faux.
 		{
 			if (lettreTrouvee[i] == 0)
 			{
 
-				win = 0;
+				win = 0; 
 			}
 		}
 
-		if (win == 1)
+		if (win == 1) // Si win est toujours à 1 (vrai), alors on a gagné.
 		{
-			printf("\n\nGagne ! Le mot mystere etait bien : %s\n", mot); // Afficher le mot mystere (Win)
-			printf("Pour fermer la fenêtre veuillez appuyer sur une touche ;)\n");
+			printf("\n\nGagne ! Le mot mystere etait bien : %s\n", mot);
+			printf("Pour fermer la fenetre, veuillez appuyer sur une touche ;)\n");
 			break;
 		}
 
 
-		if (j == 0)
+		if (lettreestdanslemot == 0) // Si la lettre choisie n'est pas dans le mot.
 		{
-			essais--;
+			coups--; // On retire un coup au joueur.
 		}
 
 	}
 
-	if (essais == 0)
+	if (coups == 0) // Si le joueur n'a plus de coups, alors c'est perdu !
 	{
-		printf("\n\nDommage ! Le mot mystere etait : %s\n", mot); // Afficher le mot mystere
-		printf("Pour fermer la fenetre veuillez appuyer sur une touche ;)\n");
+		printf("\n\nDommage ! Le mot mystere etait : %s\n", mot); 
+		printf("Pour fermer la fenetre, veuillez appuyer sur une touche ;)\n");
 
 	}
 
